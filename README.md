@@ -1,2 +1,2 @@
 # philosophers
-42 Project Philosphers
+42 Project Philosophers

@@ -6,21 +6,23 @@
 #    By: Peer <pde-bakk@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/25 17:28:30 by pde-bakk      #+#    #+#                  #
-#    Updated: 2020/08/16 04:55:21 by pde-bakk      ########   odam.nl          #
+#    Updated: 2020/08/16 17:38:23 by peer          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_one.out
 
+FLAGS = -Wall -Wextra -Werror -pedantic
+
 ifeq ($(shell uname), Linux)
  CXX = gcc
+ FLAGS += -pthread
 else
  CXX = clang
 endif
 ifdef REALG
  CXX = ~/.brew/bin/gcc-10
 endif
-FLAGS = -Wall -Wextra -Werror -pedantic
 ifdef DEBUG
  FLAGS += -g -fsanitize=address
 endif
