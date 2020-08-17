@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/16 18:46:10 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/17 17:14:26 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,22 @@ int		fill_data(t_data *data, int argc, char **argv)
 			return (1);
 		++i;
 	}
+	if (pthread_mutex_init(&data->pen, NULL))
+		return (1);
 	data->starttime = get_time_ms();
 	return (0);
 }
 
 void	philosopher_write(t_philo *phil, const char *s)
 {
-	printf("%lu\t%i %s\n", get_time_ms() - phil->data->starttime, phil->id, s);
-}
-
-void	philosopher_write_int(t_philo *phil, const char *s, int fork)
-{
-	printf("%lu\t%i %s %d\n", get_time_ms() - phil->data->starttime, phil->id, s, fork);
+	pthread_mutex_lock(&phil->data->pen);
+	ft_put_ul_fd(get_time_ms() - phil->data->starttime, 1);
+	ft_putchar_fd('\t', 1);
+	ft_put_ul_fd(phil->id, 1);
+	ft_putchar_fd(' ', 1);
+	ft_putstr_fd(s, 1, 0);
+	ft_putchar_fd('\n', 1);
+	pthread_mutex_unlock(&phil->data->pen);
 }
 
 void	*philosopher_death(t_philo *phil)
@@ -77,7 +81,6 @@ void	*start_philosopher(void *param)
 		philosopher_write(phil, "has taken fork");
 		pthread_mutex_lock(phil->rfork_mutex);
 		philosopher_write(phil, "has taken fork");
-		philosopher_write_int(phil, "took so long between meals", get_time_ms() - tim);
 		if (get_time_ms() - tim >= (unsigned long)phil->data->time_to_die)
 			return (philosopher_death(phil));
 		philosopher_write(phil, "is eating");

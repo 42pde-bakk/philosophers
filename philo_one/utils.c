@@ -6,11 +6,16 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:52:46 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/15 21:58:32 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/17 17:08:43 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, sizeof(char));
+}
 
 int	ft_putstr_fd(const char *s, int fd, int ret)
 {
@@ -42,11 +47,8 @@ int			ft_atoi(const char *str)
 	sign = 1;
 	while (iswhitespace(*str))
 		str++;
-	if (*str == '-')
-	{
-		sign = -1;
-		str++;
-	}
+	if (*str == '-' || (*str < '0' && *str > '9'))
+		return (-1);
 	else if (*str == '+')
 		str++;
 	while (*str >= '0' && *str <= '9')
@@ -59,4 +61,15 @@ int			ft_atoi(const char *str)
 	else if (result >= 9223372036854775807)
 		return (-1);
 	return (sign * result);
+}
+
+void	ft_put_ul_fd(unsigned long n, int fd)
+{
+	if (n >= 10)
+	{
+		ft_put_ul_fd(n / 10, fd);
+		ft_put_ul_fd(n % 10, fd);
+	}
+	else
+		ft_putchar_fd(n + 48, fd);
 }
