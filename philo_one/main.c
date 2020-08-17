@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/17 17:14:26 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/17 20:48:14 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,107 +34,66 @@ int		fill_data(t_data *data, int argc, char **argv)
 	while (i < data->nb_phil)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL))
+		{
+			free(data->forks);
 			return (1);
+		}
 		++i;
 	}
 	if (pthread_mutex_init(&data->pen, NULL))
+	{
+		free(data->forks);
 		return (1);
+	}
 	data->starttime = get_time_ms();
+	free(data->forks);
 	return (0);
 }
 
-void	philosopher_write(t_philo *phil, const char *s)
+void	initialize_philosopher(t_philo *philosopher, t_data *data, int i)
 {
-	pthread_mutex_lock(&phil->data->pen);
-	ft_put_ul_fd(get_time_ms() - phil->data->starttime, 1);
-	ft_putchar_fd('\t', 1);
-	ft_put_ul_fd(phil->id, 1);
-	ft_putchar_fd(' ', 1);
-	ft_putstr_fd(s, 1, 0);
-	ft_putchar_fd('\n', 1);
-	pthread_mutex_unlock(&phil->data->pen);
+	philosopher->id = i + 1;
+	philosopher->data = data;
+	philosopher->lfork = i;
+	philosopher->lfork_mutex = &data->forks[philosopher->lfork];
+	philosopher->rfork = (i + 1) % data->nb_phil;
+	philosopher->rfork_mutex = &data->forks[philosopher->rfork];
+	philosopher->nb_phil = data->nb_phil;
 }
 
-void	*philosopher_death(t_philo *phil)
+int		free_shit(pthread_t *threads, t_philo *philosophers, int ret)
 {
-	philosopher_write(phil, "has died");
-	pthread_mutex_unlock(phil->lfork_mutex);
-	pthread_mutex_unlock(phil->rfork_mutex);
-	free(phil);
-	return (NULL);
-}
-
-void	*start_philosopher(void *param)
-{
-	t_philo			*phil;
-	int				eatcount;
-	unsigned long	tim;
-
-	phil = param;
-	tim = get_time_ms();
-	// printf("started up philosopher nb %i\n", phil->id);
-	eatcount = 0;
-	while (eatcount != phil->data->eat_times)
-	{
-		philosopher_write(phil, "is thinking");
-		pthread_mutex_lock(phil->lfork_mutex);
-		philosopher_write(phil, "has taken fork");
-		pthread_mutex_lock(phil->rfork_mutex);
-		philosopher_write(phil, "has taken fork");
-		if (get_time_ms() - tim >= (unsigned long)phil->data->time_to_die)
-			return (philosopher_death(phil));
-		philosopher_write(phil, "is eating");
-		tim = get_time_ms();
-		usleep(phil->data->time_to_eat * 1000);
-
-		pthread_mutex_unlock(phil->lfork_mutex);
-		pthread_mutex_unlock(phil->rfork_mutex);
-		
-		philosopher_write(phil, "is sleeping");
-		usleep(phil->data->time_to_sleep * 1000);
-		++eatcount;
-	}
-	free(phil);
-	return NULL;
-}
-
-t_philo	*new_philosopher_struct(int count, t_data *data)
-{
-	t_philo	*out;
-
-	out = malloc(sizeof(t_philo));
-	memset(out, 0, sizeof(t_philo));
-	out->id = count + 1;
-	out->data = data;
-	out->lfork = count;
-	out->lfork_mutex = &data->forks[out->lfork];
-	out->rfork = (count + 1) % data->nb_phil;
-	out->rfork_mutex = &data->forks[out->rfork];
-	return (out);
+	free(threads);
+	free(philosophers);
+	return (ret);
 }
 
 int		start_threads(t_data *data)
 {
-	int count;
-	pthread_t	threads[data->nb_phil];
-	t_philo		*phil;
+	int			i;
+	pthread_t	*threads;
+	pthread_t	manager;
+	t_philo		*philosophers;
 
-	count = 0;
-	while (count < data->nb_phil)
+	i = 0;
+	threads = malloc(sizeof(pthread_t) * data->nb_phil);
+	philosophers = malloc(sizeof(t_philo) * data->nb_phil);
+	while (i < data->nb_phil)
 	{
-		phil = new_philosopher_struct(count, data);
-		if (pthread_create(&threads[count], NULL, start_philosopher, phil))
-			exit(1);
-		++count;
+		initialize_philosopher(&philosophers[i], data, i);
+		if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
+			return (free_shit(threads, philosophers, 1));
+		++i;
 	}
-	count -= 1;
-	while (count >= 0)
+	setup_manager(philosophers, &manager);
+	i -= 1;
+	while (i >= 0)
 	{
-		if (pthread_join(threads[count], NULL))
-			exit(1);
-		--count;
+		if (pthread_join(threads[i], NULL))
+			return (free_shit(threads, philosophers, 1));
+		--i;
 	}
-	return (0);
+	return (free_shit(threads, philosophers, 0));
 }
 
 int		main(int argc, char **argv)

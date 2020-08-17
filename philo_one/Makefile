@@ -6,7 +6,7 @@
 #    By: Peer <pde-bakk@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/25 17:28:30 by pde-bakk      #+#    #+#                  #
-#    Updated: 2020/08/16 17:38:23 by peer          ########   odam.nl          #
+#    Updated: 2020/08/17 20:30:04 by pde-bakk      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ ifdef DEBUG
  FLAGS += -g -fsanitize=address
 endif
 
-FILES = main.c utils.c gettime.c
+FILES = main.c philosopher.c \
+utils.c gettime.c
 
 all: $(NAME)
 
@@ -35,7 +36,7 @@ $(NAME):
 	$(CXX) $(FILES) $(FLAGS) -o $(NAME)
 	
 clean:
-
+	rm -rf $(NAME).dSYM
 fclean: clean
 	rm -f $(NAME)
 

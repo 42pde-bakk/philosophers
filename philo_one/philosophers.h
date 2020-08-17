@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/17 17:12:38 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/17 20:47:56 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,19 @@ typedef struct	s_data
 typedef struct	s_philo
 {
 	int				id;
-	useconds_t		last_ate;
+	unsigned long	last_ate;
+	unsigned long	time_to_die;
 	int				amount_ate;
 	int				lfork;
 	pthread_mutex_t	*lfork_mutex;
 	int				rfork;
 	pthread_mutex_t	*rfork_mutex;
 	t_data			*data;
+	int				nb_phil;
 }				t_philo;
 
+void		*start_philosopher(void *param);
+int			setup_manager(t_philo *philosophers, pthread_t manager);
 void		ft_putchar_fd(char c, int fd);
 int			ft_putstr_fd(const char *s, int fd, int ret);
 int			ft_atoi(const char *str);
