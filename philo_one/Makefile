@@ -6,7 +6,7 @@
 #    By: Peer <pde-bakk@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/25 17:28:30 by pde-bakk      #+#    #+#                  #
-#    Updated: 2020/08/17 20:30:04 by pde-bakk      ########   odam.nl          #
+#    Updated: 2020/08/18 23:43:16 by peer          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ ifdef DEBUG
 endif
 
 FILES = main.c philosopher.c \
-utils.c gettime.c
+utils.c gettime.c manager.c
 
 all: $(NAME)
 
@@ -41,4 +41,3 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-

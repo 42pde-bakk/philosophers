@@ -6,36 +6,31 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/17 20:51:29 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/19 00:40:00 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	*kill_all_philosophers(t_philo *philosophers)
+int	mr_manager(t_philo *philosophers, t_data *data)
 {
-	
-}
-
-void	*start_managing(void *param)
-{
-	t_philo	*philosophers;
 	int		i;
 
-	philosophers = param;
 	i = 0;
 	while (1)
 	{
-		if (get_time_ms() - philosophers[i].last_ate > philosophers[i].time_to_die)
-			return (philo)
+		// pthread_mutex_lock(&philosophers[i].time_elapsed_mutex);
+		if (get_time_ms() - philosophers[i].last_ate >=
+			(unsigned long)data->time_to_die) {
+			philosopher_write(&philosophers[i], "has died");
+			return (1);
+		}
+		// pthread_mutex_unlock(&philosophers[i].time_elapsed_mutex);
+		// if (philosophers[i].state != ALIVE)
+		// 	return (1);
 		++i;
-		if (i >= philosophers[i].nb_phil)
+		if (i >= data->nb_phil)
 			i = 0;
 	}
-}
-
-int	setup_manager(t_philo *philosophers, pthread_t manager)
-{
-	if (pthread_create(&manager, NULL, start_managing, philosophers))
-		return (1);
+	return (0);
 }

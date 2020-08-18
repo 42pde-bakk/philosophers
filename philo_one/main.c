@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/17 20:48:14 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/19 00:48:06 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,17 @@ int		fill_data(t_data *data, int argc, char **argv)
 
 void	initialize_philosopher(t_philo *philosopher, t_data *data, int i)
 {
+	memset(philosopher, 0, sizeof(t_philo));
 	philosopher->id = i + 1;
 	philosopher->data = data;
 	philosopher->lfork = i;
 	philosopher->lfork_mutex = &data->forks[philosopher->lfork];
 	philosopher->rfork = (i + 1) % data->nb_phil;
 	philosopher->rfork_mutex = &data->forks[philosopher->rfork];
-	philosopher->nb_phil = data->nb_phil;
+	philosopher->state = ALIVE;
+	philosopher->last_ate = get_time_ms();
+	if (pthread_mutex_init(&philosopher->time_elapsed_mutex, NULL))
+		exit(1);
 }
 
 int		free_shit(pthread_t *threads, t_philo *philosophers, int ret)
@@ -68,11 +72,10 @@ int		free_shit(pthread_t *threads, t_philo *philosophers, int ret)
 	return (ret);
 }
 
-int		start_threads(t_data *data)
+int		setup_threads(t_data *data)
 {
 	int			i;
 	pthread_t	*threads;
-	pthread_t	manager;
 	t_philo		*philosophers;
 
 	i = 0;
@@ -80,19 +83,32 @@ int		start_threads(t_data *data)
 	philosophers = malloc(sizeof(t_philo) * data->nb_phil);
 	while (i < data->nb_phil)
 	{
-		initialize_philosopher(&philosophers[i], data, i);
-		if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
-			return (free_shit(threads, philosophers, 1));
+		if (i % 2 == 0)
+		{
+			initialize_philosopher(&philosophers[i], data, i);
+			if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
+				return (free_shit(threads, philosophers, 1));
+			if (pthread_detach(threads[i]))
+				return (free_shit(threads, philosophers, 1));
+		}
 		++i;
 	}
-	setup_manager(philosophers, &manager);
-	i -= 1;
-	while (i >= 0)
+	i = 0;
+	usleep(500);
+	while (i < data->nb_phil)
 	{
-		if (pthread_join(threads[i], NULL))
-			return (free_shit(threads, philosophers, 1));
-		--i;
+		if (i % 2)
+		{
+			initialize_philosopher(&philosophers[i], data, i);
+			if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
+				return (free_shit(threads, philosophers, 1));
+			if (pthread_detach(threads[i]))
+				return (free_shit(threads, philosophers, 1));
+		}
+		++i;
 	}
+	mr_manager(philosophers, data);
+	printf("mr manager is done\n");
 	return (free_shit(threads, philosophers, 0));
 }
 
@@ -102,6 +118,6 @@ int		main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6 || fill_data(&data, argc, argv))
 		return (ft_putstr_fd("bad arguments\n", 2, 1));
-	start_threads(&data);
+	setup_threads(&data);
 	// system("leaks philo_one.out");
 }
