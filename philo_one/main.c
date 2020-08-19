@@ -6,63 +6,21 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/19 14:46:20 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/19 23:56:58 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-int		fill_data(t_data *data, int argc, char **argv)
-{
-	int i;
-
-	memset(data, 0, sizeof(t_data));
-	data->nb_phil = ft_atoi(argv[1]);
-	data->time_to_die = ft_atoi(argv[2]);
-	data->time_to_eat = ft_atoi(argv[3]);
-	data->time_to_sleep = ft_atoi(argv[4]);
-	data->eat_times = -1;
-	if (argc == 6)
-		data->eat_times = ft_atoi(argv[5]);
-	if (data->nb_phil <= 0 || data->time_to_die <= 0 || data->time_to_eat <= 0 ||
-	data->time_to_sleep <= 0 || (argc == 6 && data->eat_times < 0))
-		return (1);
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_phil);
-	if (!data->forks)
-		return (1);
-	i = 0;
-	while (i < data->nb_phil)
-	{
-		if (pthread_mutex_init(&data->forks[i], NULL))
-		{
-			free(data->forks);
-			return (1);
-		}
-		++i;
-	}
-	if (pthread_mutex_init(&data->pen, NULL))
-	{
-		free(data->forks);
-		return (1);
-	}
-	data->starttime = get_time_ms();
-	free(data->forks);
-	return (0);
-}
 
 void	initialize_philosopher(t_philo *philosopher, t_data *data, int i)
 {
 	memset(philosopher, 0, sizeof(t_philo));
 	philosopher->id = i + 1;
 	philosopher->data = data;
-	philosopher->lfork = i;
-	philosopher->lfork_mutex = &data->forks[philosopher->lfork];
-	philosopher->rfork = (i + 1) % data->nb_phil;
-	philosopher->rfork_mutex = &data->forks[philosopher->rfork];
+	philosopher->lfork_mutex = &data->forks[i];
+	philosopher->rfork_mutex = &data->forks[(i + 1) % data->nb_phil];
 	philosopher->state = ALIVE;
 	philosopher->last_ate = get_time_ms();
-	if (pthread_mutex_init(&philosopher->time_elapsed_mutex, NULL))
-		exit(1);
 }
 
 int		free_shit(pthread_t *threads, t_philo *philosophers, int ret)
@@ -72,39 +30,29 @@ int		free_shit(pthread_t *threads, t_philo *philosophers, int ret)
 	return (ret);
 }
 
-int		run_threads(t_data *data, t_philo *philosophers, pthread_t *threads, int even)
-{
-	int i;
-
-	i = 0;
-	while (i < data->nb_phil)
-	{
-		if (i % 2 == even)
-		{
-			initialize_philosopher(&philosophers[i], data, i);
-			if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
-				return (1);
-			if (pthread_detach(threads[i]))
-				return (1);
-		}
-		++i;
-	}
-	return (0);
-}
-
 int		setup_threads(t_data *data)
 {
 	pthread_t	*threads;
 	t_philo		*philosophers;
+	int			i;
 
+	i = 0;
 	threads = malloc(sizeof(pthread_t) * data->nb_phil);
+	if (!threads)
+		return (1);
 	philosophers = malloc(sizeof(t_philo) * data->nb_phil);
-	if (run_threads(data, philosophers, threads, 0))
-		return (free_shit(threads, philosophers, 1));
-	usleep(500);
-	if (run_threads(data, philosophers, threads, 1))
-		return (free_shit(threads, philosophers, 1));
-	// usleep(500);
+	if (!philosophers)
+		return (1);
+	while (i < data->nb_phil)
+	{
+		initialize_philosopher(&philosophers[i], data, i);
+		if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
+			return (free_shit(threads, philosophers, 1));
+		if (pthread_detach(threads[i]))
+			return (free_shit(threads, philosophers, 1));
+		usleep(50);
+		++i;
+	}
 	mr_manager(philosophers, data);
 	return (free_shit(threads, philosophers, 0));
 }
@@ -115,6 +63,7 @@ int		main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6 || fill_data(&data, argc, argv))
 		return (ft_putstr_fd("bad arguments\n", 2, 1));
-	setup_threads(&data);
-	// system("leaks philo_one.out");
+	if (setup_threads(&data))
+		return (ft_putstr_fd("something went horribly wrong\n", 2, 1));
+	free(data.forks);
 }

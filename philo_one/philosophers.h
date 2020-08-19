@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/19 00:21:29 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/19 23:57:36 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ typedef struct	s_philo
 	int				id;
 	unsigned long	last_ate;
 	int				amount_ate;
-	int				lfork;
 	pthread_mutex_t	*lfork_mutex;
-	int				rfork;
 	pthread_mutex_t	*rfork_mutex;
 	t_data			*data;
-	pthread_mutex_t	time_elapsed_mutex;
 	int				state;
 }				t_philo;
+
+int			fill_data(t_data *data, int argc, char **argv);
+
 
 void		philosopher_write(t_philo *phil, const char *s);
 void		*start_philosopher(void *param);
