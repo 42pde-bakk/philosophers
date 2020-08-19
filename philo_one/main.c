@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/19 00:48:06 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/19 14:46:20 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,43 +72,40 @@ int		free_shit(pthread_t *threads, t_philo *philosophers, int ret)
 	return (ret);
 }
 
+int		run_threads(t_data *data, t_philo *philosophers, pthread_t *threads, int even)
+{
+	int i;
+
+	i = 0;
+	while (i < data->nb_phil)
+	{
+		if (i % 2 == even)
+		{
+			initialize_philosopher(&philosophers[i], data, i);
+			if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
+				return (1);
+			if (pthread_detach(threads[i]))
+				return (1);
+		}
+		++i;
+	}
+	return (0);
+}
+
 int		setup_threads(t_data *data)
 {
-	int			i;
 	pthread_t	*threads;
 	t_philo		*philosophers;
 
-	i = 0;
 	threads = malloc(sizeof(pthread_t) * data->nb_phil);
 	philosophers = malloc(sizeof(t_philo) * data->nb_phil);
-	while (i < data->nb_phil)
-	{
-		if (i % 2 == 0)
-		{
-			initialize_philosopher(&philosophers[i], data, i);
-			if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
-				return (free_shit(threads, philosophers, 1));
-			if (pthread_detach(threads[i]))
-				return (free_shit(threads, philosophers, 1));
-		}
-		++i;
-	}
-	i = 0;
+	if (run_threads(data, philosophers, threads, 0))
+		return (free_shit(threads, philosophers, 1));
 	usleep(500);
-	while (i < data->nb_phil)
-	{
-		if (i % 2)
-		{
-			initialize_philosopher(&philosophers[i], data, i);
-			if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
-				return (free_shit(threads, philosophers, 1));
-			if (pthread_detach(threads[i]))
-				return (free_shit(threads, philosophers, 1));
-		}
-		++i;
-	}
+	if (run_threads(data, philosophers, threads, 1))
+		return (free_shit(threads, philosophers, 1));
+	// usleep(500);
 	mr_manager(philosophers, data);
-	printf("mr manager is done\n");
 	return (free_shit(threads, philosophers, 0));
 }
 
