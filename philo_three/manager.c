@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/20 21:15:17 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/21 01:37:08 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	genocide(t_data *data)
 
 	i = 0;
 	sem_wait(data->finished);
+	sem_wait(data->pen);
 	while (data->pids[i])
 	{
 		kill(data->pids[i], SIGTERM);
@@ -29,25 +30,26 @@ void	genocide(t_data *data)
 		waitpid(data->pids[i], NULL, 0);
 		++i;
 	}
-	return ;
 }
 
-void*	mr_manager(void *param)
+void	*mr_manager(void *param)
 {
 	t_philo	*phil;
 
 	phil = param;
+	usleep(50);
 	while (1)
 	{
 		sem_wait(phil->check);
-		if (get_time_ms() - phil->last_ate >= (unsigned long)phil->data->time_to_die) {
+		if (get_time_ms() - phil->last_ate >=
+			(unsigned long)phil->data->time_to_die)
+		{
 			philosopher_write(phil, "has died");
-			printf("Because %lu >= %d\n", phil->last_ate - phil->data->starttime, phil->data->time_to_die);
 			sem_post(phil->data->finished);
 			return (0);
 		}
 		sem_post(phil->check);
-		usleep(500);
+		usleep(50);
 	}
 	return (0);
 }
