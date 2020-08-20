@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/20 01:45:39 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/20 21:12:02 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct	s_data
 	sem_t			*pen;
 	unsigned long	starttime;
 	int				*pids;
+	sem_t			*finished;
 }				t_data;
 
 typedef struct	s_philo
@@ -51,21 +52,23 @@ typedef struct	s_philo
 	int				amount_ate;
 	t_data			*data;
 	int				state;
-	sem_t			*myforks;
+	// sem_t			*myforks;
+	sem_t			*check;
 }				t_philo;
 
-int			fill_data(t_data *data, int argc, char **argv);
+int				fill_data(t_data *data, int argc, char **argv);
 
 
-void		philosopher_write(t_philo *phil, const char *s);
-void		*start_philosopher(t_philo *phil);
+void			philosopher_write(t_philo *phil, const char *s);
+void			*start_philosopher(t_philo *phil);
 
-int			mr_manager(t_philo *philosophers, t_data *data);
+void			genocide(t_data *data);
+void			*mr_manager(void *param);
 
-void		ft_putchar_fd(char c, int fd);
-int			ft_putstr_fd(const char *s, int fd, int ret);
-int			ft_atoi(const char *str);
-void		ft_put_ul_fd(unsigned long n, int fd);
+void			ft_putchar_fd(char c, int fd);
+int				ft_putstr_fd(const char *s, int fd, int ret);
+int				ft_atoi(const char *str);
+void			ft_put_ul_fd(unsigned long n, int fd);
 
 unsigned long	get_time_ms(void);
 unsigned long	get_time_us(void);

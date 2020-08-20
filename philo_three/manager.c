@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/20 01:21:26 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/20 21:15:17 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,32 +17,37 @@ void	genocide(t_data *data)
 	int i;
 
 	i = 0;
+	sem_wait(data->finished);
 	while (data->pids[i])
 	{
 		kill(data->pids[i], SIGTERM);
-		printf("just killed %i, pid=%d\n", i, data->pids[i]);
+		++i;
+	}
+	i = 0;
+	while (data->pids[i])
+	{
+		waitpid(data->pids[i], NULL, 0);
 		++i;
 	}
 	return ;
 }
 
-int	mr_manager(t_philo *philosophers, t_data *data)
+void*	mr_manager(void *param)
 {
-	int		i;
+	t_philo	*phil;
 
-	i = 0;
+	phil = param;
 	while (1)
 	{
-		// if (get_time_ms() - philosophers[i].last_ate >=
-		// 	(unsigned long)data->time_to_die) {
-			if (0) {
-			philosopher_write(&philosophers[i], "has died");
-			genocide(data);
-			return (1);
+		sem_wait(phil->check);
+		if (get_time_ms() - phil->last_ate >= (unsigned long)phil->data->time_to_die) {
+			philosopher_write(phil, "has died");
+			printf("Because %lu >= %d\n", phil->last_ate - phil->data->starttime, phil->data->time_to_die);
+			sem_post(phil->data->finished);
+			return (0);
 		}
-		++i;
-		if (i >= data->nb_phil)
-			i = 0;
+		sem_post(phil->check);
+		usleep(500);
 	}
 	return (0);
 }

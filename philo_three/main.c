@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/20 01:47:58 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/20 21:13:00 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	initialize_philosopher(t_philo *philosopher, t_data *data, int i)
 	philosopher->data = data;
 	philosopher->state = ALIVE;
 	philosopher->last_ate = get_time_ms();
+	sem_unlink("/check");
+	philosopher->check = sem_open("/check", O_CREAT, S_IRWXU | S_IRWXO, 1);
 }
 
 int		free_shit(t_philo *philosophers, int ret)
@@ -32,17 +34,12 @@ int		setup_threads(t_data *data)
 	t_philo		*philosophers;
 	int			i;
 	int			pid;
+	pthread_t	thread;
 
 	i = 0;
 	philosophers = malloc(sizeof(t_philo) * data->nb_phil);
 	if (!philosophers)
-		return (1);
-	// if (sem_close(data->forks)) {
-	// 	printf("closing semaphore went wrong\n");
-	// 	sem_unlink("/forks");
-	// 	return (free_shit(philosophers, 1));
-	// }
-	
+		return (1);	
 	while (i < data->nb_phil)
 	{
 		pid = fork();
@@ -51,7 +48,9 @@ int		setup_threads(t_data *data)
 		initialize_philosopher(&philosophers[i], data, i);
 		if (pid == 0)
 		{
-			philosophers[i].myforks = 	data->forks = sem_open("/forks", O_CREAT, S_IRWXU | S_IRWXO, data->nb_phil);
+			if (pthread_create(&thread, NULL, mr_manager, &philosophers[i]))
+				exit(1);
+			pthread_detach(thread);
 			start_philosopher(&philosophers[i]);
 			printf("philosopher %d done\n", i);
 			exit(0);
@@ -60,13 +59,7 @@ int		setup_threads(t_data *data)
 		usleep(50);
 		++i;
 	}
-	mr_manager(philosophers, data);
-	i = 0;
-	while (data->pids[i])
-	{
-		waitpid(data->pids[i], NULL, 0);
-		++i;
-	}
+	genocide(data);
 	return (free_shit(philosophers, 0));
 }
 
