@@ -6,7 +6,7 @@
 #    By: Peer <pde-bakk@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/25 17:28:30 by pde-bakk      #+#    #+#                  #
-#    Updated: 2020/08/20 00:02:02 by peer          ########   odam.nl          #
+#    Updated: 2020/08/21 01:11:14 by peer          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ all: $(NAME)
 
 $(NAME):
 	$(CXX) $(FILES) $(FLAGS) -o $(NAME)
-	
+
 clean:
 	rm -rf $(NAME).dSYM
 fclean: clean

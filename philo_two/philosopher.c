@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/20 00:23:43 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/21 00:57:34 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,6 @@ void	philosopher_write(t_philo *phil, const char *s)
 	ft_putstr_fd(s, 1, 0);
 	ft_putchar_fd('\n', 1);
 	sem_post(phil->data->pen);
-}
-
-void	*philosopher_death(t_philo *phil)
-{
-	philosopher_write(phil, "has died");
-	sem_post(phil->data->forks);
-	sem_post(phil->data->forks);
-	phil->state = DEAD;
-	return (NULL);
 }
 
 void	*start_philosopher(void *param)
@@ -57,6 +48,5 @@ void	*start_philosopher(void *param)
 		philosopher_write(phil, "is sleeping");
 		usleep(phil->data->time_to_sleep * 1000);
 	}
-	phil->state = DONE;
-	return NULL;
+	return (NULL);
 }
