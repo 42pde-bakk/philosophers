@@ -6,7 +6,7 @@
 #    By: Peer <pde-bakk@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/25 17:28:30 by pde-bakk      #+#    #+#                  #
-#    Updated: 2020/08/19 23:58:42 by peer          ########   odam.nl          #
+#    Updated: 2020/08/21 00:54:56 by peer          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,13 +28,13 @@ ifdef DEBUG
 endif
 
 FILES = main.c philosopher.c initialize_struct.c \
-utils.c gettime.c manager.c
+		utils.c gettime.c manager.c
 
 all: $(NAME)
 
 $(NAME):
 	$(CXX) $(FILES) $(FLAGS) -o $(NAME)
-	
+
 clean:
 	rm -rf $(NAME).dSYM
 fclean: clean

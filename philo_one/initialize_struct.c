@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   init_mutexes.c                                     :+:    :+:            */
+/*   initialize_struct.c                                :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: peer <peer@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/19 23:56:21 by peer          #+#    #+#                 */
-/*   Updated: 2020/08/19 23:57:09 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/21 00:48:45 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		init_mutexes(t_data *data)
 	return (0);
 }
 
-int		fill_data(t_data *data, int argc, char **argv)
+int		init_struct(t_data *data, int argc, char **argv)
 {
 	memset(data, 0, sizeof(t_data));
 	data->nb_phil = ft_atoi(argv[1]);
@@ -38,8 +38,8 @@ int		fill_data(t_data *data, int argc, char **argv)
 	data->eat_times = -1;
 	if (argc == 6)
 		data->eat_times = ft_atoi(argv[5]);
-	if (data->nb_phil <= 0 || data->time_to_die <= 0 || data->time_to_eat <= 0 ||
-	data->time_to_sleep <= 0 || (argc == 6 && data->eat_times < 0))
+	if (data->nb_phil <= 0 || data->time_to_die <= 0 || data->time_to_eat <= 0
+	|| data->time_to_sleep <= 0 || (argc == 6 && data->eat_times < 0))
 		return (1);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_phil);
 	if (!data->forks)

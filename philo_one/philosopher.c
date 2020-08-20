@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/19 16:27:02 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/21 00:51:16 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	*philosopher_death(t_philo *phil)
 	philosopher_write(phil, "has died");
 	pthread_mutex_unlock(phil->lfork_mutex);
 	pthread_mutex_unlock(phil->rfork_mutex);
-	phil->state = DEAD;
 	return (NULL);
 }
 
@@ -53,10 +52,9 @@ void	*start_philosopher(void *param)
 		++eatcount;
 		usleep(phil->data->time_to_eat * 1000);
 		pthread_mutex_unlock(phil->lfork_mutex);
-		pthread_mutex_unlock(phil->rfork_mutex);		
+		pthread_mutex_unlock(phil->rfork_mutex);
 		philosopher_write(phil, "is sleeping");
 		usleep(phil->data->time_to_sleep * 1000);
 	}
-	phil->state = DONE;
-	return NULL;
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/19 23:56:58 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/21 00:49:28 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	initialize_philosopher(t_philo *philosopher, t_data *data, int i)
 	philosopher->data = data;
 	philosopher->lfork_mutex = &data->forks[i];
 	philosopher->rfork_mutex = &data->forks[(i + 1) % data->nb_phil];
-	philosopher->state = ALIVE;
 	philosopher->last_ate = get_time_ms();
 }
 
@@ -46,7 +45,8 @@ int		setup_threads(t_data *data)
 	while (i < data->nb_phil)
 	{
 		initialize_philosopher(&philosophers[i], data, i);
-		if (pthread_create(&threads[i], NULL, start_philosopher, &philosophers[i]))
+		if (pthread_create(&threads[i], NULL, start_philosopher,
+			&philosophers[i]))
 			return (free_shit(threads, philosophers, 1));
 		if (pthread_detach(threads[i]))
 			return (free_shit(threads, philosophers, 1));
@@ -61,7 +61,7 @@ int		main(int argc, char **argv)
 {
 	t_data	data;
 
-	if (argc < 5 || argc > 6 || fill_data(&data, argc, argv))
+	if (argc < 5 || argc > 6 || init_struct(&data, argc, argv))
 		return (ft_putstr_fd("bad arguments\n", 2, 1));
 	if (setup_threads(&data))
 		return (ft_putstr_fd("something went horribly wrong\n", 2, 1));
