@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/21 00:52:19 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/22 00:25:08 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@
 # include <pthread.h>
 # include <string.h>
 # include <sys/time.h>
+#include <stdio.h>
+
+enum	e_state
+{
+	ALIVE,
+	DEAD,
+	DONE
+};
 
 typedef struct	s_data
 {
@@ -26,19 +34,23 @@ typedef struct	s_data
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				eat_times;
+	int				state;
+	pthread_mutex_t	state_mutex;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	pen;
+	int				threads_alive;
 	unsigned long	starttime;
 }				t_data;
 
 typedef struct	s_philo
 {
 	int				id;
-	unsigned long	last_ate;
 	int				amount_ate;
+	unsigned long	last_ate;
 	pthread_mutex_t	*lfork_mutex;
 	pthread_mutex_t	*rfork_mutex;
 	t_data			*data;
+	pthread_mutex_t	last_ate_mutex;
 }				t_philo;
 
 int				init_struct(t_data *data, int argc, char **argv);
@@ -48,10 +60,17 @@ void			*start_philosopher(void *param);
 
 int				mr_manager(t_philo *philosophers, t_data *data);
 
+/*
+** philosopher_utils.c
+*/
+void			philosopher_write(t_philo *phil, const char *s);
+void			*philosopher_death(t_philo *phil);
+void			set_eat_time(t_philo *phil);
+
 void			ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(const char *s, int fd, int ret);
 int				ft_atoi(const char *str);
 void			ft_put_ul_fd(unsigned long n, int fd);
-
 unsigned long	get_time_ms(void);
+
 #endif
