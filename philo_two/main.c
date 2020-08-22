@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/21 01:10:00 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/22 22:54:45 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,19 @@ int		free_shit(pthread_t *threads, t_philo *philosophers, int ret)
 	return (ret);
 }
 
+void	join_threads(pthread_t *threads, t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->nb_phil)
+	{
+		if (pthread_join(threads[i], NULL))
+			return ;
+		++i;
+	}
+}
+
 int		setup_threads(t_data *data)
 {
 	pthread_t	*threads;
@@ -45,14 +58,10 @@ int		setup_threads(t_data *data)
 		initialize_philosopher(&philos[i], data, i);
 		if (pthread_create(&threads[i], NULL, start_philosopher, &philos[i]))
 			return (free_shit(threads, philos, 1));
-		if (pthread_detach(threads[i]))
-			return (free_shit(threads, philos, 1));
-		usleep(50);
 		++i;
 	}
 	mr_manager(philos, data);
-	sem_unlink("/forks");
-	sem_unlink("/pen");
+	join_threads(threads, data);
 	return (free_shit(threads, philos, 0));
 }
 

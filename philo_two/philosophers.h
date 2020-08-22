@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/21 01:10:52 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/22 22:24:57 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@
 # include <fcntl.h>
 # include <string.h>
 # include <sys/time.h>
+#include <stdio.h> //rm
+enum	e_state
+{
+	ALIVE,
+	DEAD,
+	DONE
+};
 
 typedef struct	s_data
 {
@@ -28,16 +35,18 @@ typedef struct	s_data
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				eat_times;
+	int				state;
 	sem_t			*forks;
 	sem_t			*pen;
+	sem_t			*state_sem;
 	unsigned long	starttime;
 }				t_data;
 
 typedef struct	s_philo
 {
 	int				id;
-	unsigned long	last_ate;
 	int				amount_ate;
+	unsigned long	last_ate;
 	t_data			*data;
 }				t_philo;
 

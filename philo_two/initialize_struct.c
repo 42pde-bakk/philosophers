@@ -6,7 +6,7 @@
 /*   By: peer <peer@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/19 23:56:21 by peer          #+#    #+#                 */
-/*   Updated: 2020/08/21 01:04:41 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/22 18:37:01 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@ int		init_mutexes(t_data *data)
 	sem_unlink("/pen");
 	data->pen = sem_open("/pen", O_CREAT, S_IRWXU | S_IRWXO, 1);
 	if (data->pen == SEM_FAILED)
+		return (1);
+	sem_unlink("/state");
+	data->state_sem = sem_open("/state", O_CREAT, S_IRWXU | S_IRWXO, 1);
+	if (data->state_sem == SEM_FAILED)
 		return (1);
 	sem_unlink("/forks");
 	data->forks = sem_open("/forks", O_CREAT, S_IRWXU | S_IRWXO, data->nb_phil);
