@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/21 01:40:05 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/23 18:36:28 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	initialize_philosopher(t_philo *philosopher, t_data *data, int i)
 	philosopher->id = i + 1;
 	philosopher->data = data;
 	philosopher->last_ate = get_time_ms();
-	sem_unlink("/check");
-	philosopher->check = sem_open("/check", O_CREAT, S_IRWXU | S_IRWXO, 1);
+	sem_unlink("/state_sem");
+	philosopher->state_sem = sem_open("/state_sem", O_CREAT, S_IRWXU | S_IRWXO, 1);
 }
 
 int		free_shit(t_philo *philosophers, int ret)

@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/21 01:24:02 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/23 18:37:52 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,22 @@ void	philosopher_write(t_philo *phil, const char *s)
 	sem_post(phil->data->pen);
 }
 
+void	philosopher_eat(t_philo *phil, int *eatcount)
+{
+	sem_wait(phil->state_sem);
+	phil->last_ate = get_time_ms();
+	if (*eatcount != -1)
+		philosopher_write(phil, "is eating");
+	*eatcount += 1;
+	sem_post(phil->state_sem);
+}
+
 void	start_philosopher(t_philo *phil)
 {
 	int	eatcount;
 
-	phil->last_ate = get_time_ms();
-	eatcount = 0;
+	eatcount = -1;
+	philosopher_eat(phil, &eatcount);
 	while (eatcount != phil->data->eat_times)
 	{
 		philosopher_write(phil, "is thinking");
@@ -37,11 +47,7 @@ void	start_philosopher(t_philo *phil)
 		philosopher_write(phil, "has taken fork");
 		sem_wait(phil->data->forks);
 		philosopher_write(phil, "has taken fork");
-		sem_wait(phil->check);
-		philosopher_write(phil, "is eating");
-		phil->last_ate = get_time_ms();
-		++eatcount;
-		sem_post(phil->check);
+		philosopher_eat(phil, &eatcount);
 		usleep(phil->data->time_to_eat * 1000);
 		sem_post(phil->data->forks);
 		sem_post(phil->data->forks);

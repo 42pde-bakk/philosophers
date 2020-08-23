@@ -6,7 +6,7 @@
 #    By: Peer <pde-bakk@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/25 17:28:30 by pde-bakk      #+#    #+#                  #
-#    Updated: 2020/08/21 01:41:19 by peer          ########   odam.nl          #
+#    Updated: 2020/08/23 18:33:51 by pde-bakk      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,3 +41,7 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+debug: FLAGS += -g -fsanitize=thread
+debug: re
+	TSAN_OPTIONS=second_deadlock_stack=1 ./$(NAME) 4 410 200 200 2

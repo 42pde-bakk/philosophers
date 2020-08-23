@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/21 01:40:19 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/23 18:36:16 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct	s_philo
 	unsigned long	last_ate;
 	int				amount_ate;
 	t_data			*data;
-	sem_t			*check;
+	sem_t			*state_sem;
 }				t_philo;
 
 int				init_struct(t_data *data, int argc, char **argv);
