@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/23 18:19:17 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/23 18:29:11 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <fcntl.h>
 # include <string.h>
 # include <sys/time.h>
-#include <stdio.h> //rm
 
 enum	e_state
 {
