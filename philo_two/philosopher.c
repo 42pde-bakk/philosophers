@@ -6,23 +6,11 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/22 22:56:57 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/23 18:27:03 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-void	philosopher_write(t_philo *phil, const char *s)
-{
-	sem_wait(phil->data->pen);
-	ft_put_ul_fd(get_time_ms() - phil->data->starttime, 1);
-	ft_putchar_fd('\t', 1);
-	ft_put_ul_fd(phil->id, 1);
-	ft_putchar_fd(' ', 1);
-	ft_putstr_fd(s, 1, 0);
-	ft_putchar_fd('\n', 1);
-	sem_post(phil->data->pen);
-}
 
 int		check_death(t_philo *phil)
 {
@@ -60,6 +48,8 @@ void	philosopher_eat(t_philo *phil, int *eatcount)
 {
 	sem_wait(phil->data->state_sem);
 	phil->last_ate = get_time_ms();
+	if (*eatcount != -1)
+		philosopher_write(phil, "is eating");
 	*eatcount += 1;
 	sem_post(phil->data->state_sem);
 }
@@ -70,15 +60,15 @@ void	*start_philosopher(void *param)
 	int				eatcount;
 
 	phil = param;
+	usleep(phil->id % 2 * 200);
+	eatcount = -1;
 	philosopher_eat(phil, &eatcount);
-	eatcount = 0;
 	while (eatcount != phil->data->eat_times)
 	{
 		philosopher_write(phil, "is thinking");
 		if (take_forks(phil))
 			break ;
 		philosopher_eat(phil, &eatcount);
-		philosopher_write(phil, "is eating");
 		usleep(phil->data->time_to_eat * 1000);
 		sem_post(phil->data->forks);
 		sem_post(phil->data->forks);
@@ -89,5 +79,5 @@ void	*start_philosopher(void *param)
 		if (check_death(phil))
 			break ;
 	}
-	return (NULL);
+	return (set_state(phil));
 }

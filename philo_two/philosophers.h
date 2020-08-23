@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/22 22:24:57 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/23 18:19:17 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <string.h>
 # include <sys/time.h>
 #include <stdio.h> //rm
+
 enum	e_state
 {
 	ALIVE,
@@ -53,6 +54,7 @@ typedef struct	s_philo
 int				init_struct(t_data *data, int argc, char **argv);
 
 void			philosopher_write(t_philo *phil, const char *s);
+void			*set_state(t_philo *phil);
 void			*start_philosopher(void *param);
 
 int				mr_manager(t_philo *philosophers, t_data *data);

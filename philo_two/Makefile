@@ -6,7 +6,7 @@
 #    By: Peer <pde-bakk@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/25 17:28:30 by pde-bakk      #+#    #+#                  #
-#    Updated: 2020/08/22 22:33:28 by peer          ########   odam.nl          #
+#    Updated: 2020/08/23 18:20:25 by pde-bakk      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ ifdef THREADDEBUG
  FLAGS += -g -fsanitize=thread
 endif
 
-FILES =	main.c philosopher.c \
+FILES =	main.c philosopher.c philosopher_utils.c \
 		initialize_struct.c manager.c \
 		utils.c gettime.c
 
