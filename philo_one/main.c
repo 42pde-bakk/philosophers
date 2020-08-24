@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/22 00:27:26 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/24 11:15:46 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int		setup_threads(t_data *data, t_philo *philosophers)
 		++i;
 		++data->threads_alive;
 	}
+	free(threads); //check if data race
 	return (0);
 }
 
@@ -76,5 +77,6 @@ int		main(int argc, char **argv)
 	}
 	free(data.forks);
 	free(philosophers);
+	system("leaks philo_one.out");
 	return (0);
 }

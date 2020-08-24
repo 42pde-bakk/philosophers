@@ -6,7 +6,7 @@
 /*   By: peer <peer@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/22 00:16:25 by peer          #+#    #+#                 */
-/*   Updated: 2020/08/22 00:16:32 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/24 11:09:52 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,12 @@ void	*philosopher_death(t_philo *phil)
 	return (NULL);
 }
 
-void	set_eat_time(t_philo *phil)
+void	philosopher_eat(t_philo *phil, int *eatcount)
 {
 	pthread_mutex_lock(&phil->last_ate_mutex);
 	phil->last_ate = get_time_ms();
+	if (*eatcount != -1)
+		philosopher_write(phil, "is eating");
+	*eatcount += 1;
 	pthread_mutex_unlock(&phil->last_ate_mutex);
 }

@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/22 00:25:08 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/24 11:08:29 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int				mr_manager(t_philo *philosophers, t_data *data);
 */
 void			philosopher_write(t_philo *phil, const char *s);
 void			*philosopher_death(t_philo *phil);
-void			set_eat_time(t_philo *phil);
+void			philosopher_eat(t_philo *phil, int *eatcount);
 
 void			ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(const char *s, int fd, int ret);
