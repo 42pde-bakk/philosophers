@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/24 11:15:46 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/24 18:40:26 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,11 @@ int		initialize_philosopher(t_philo *philosopher, t_data *data, int i)
 	return (0);
 }
 
-int		setup_threads(t_data *data, t_philo *philosophers)
+int		setup_threads(t_data *data, t_philo *philosophers, pthread_t *threads)
 {
 	int			i;
-	pthread_t	*threads;
 
 	i = 0;
-	threads = malloc(sizeof(pthread_t) * data->nb_phil);
-	if (!threads)
-		return (1);
 	while (i < data->nb_phil)
 	{
 		if (initialize_philosopher(&philosophers[i], data, i))
@@ -51,7 +47,7 @@ int		setup_threads(t_data *data, t_philo *philosophers)
 		++i;
 		++data->threads_alive;
 	}
-	free(threads); //check if data race
+	mr_manager(philosophers, data);
 	return (0);
 }
 
@@ -59,15 +55,18 @@ int		main(int argc, char **argv)
 {
 	t_data		data;
 	t_philo		*philosophers;
+	pthread_t	*threads;
 
 	if (argc < 5 || argc > 6 || init_struct(&data, argc, argv))
 		return (ft_putstr_fd("bad arguments\n", 2, 1));
 	philosophers = malloc(sizeof(t_philo) * data.nb_phil);
 	if (!philosophers)
 		return (ft_putstr_fd("cant malloc\n", 2, 1));
-	if (setup_threads(&data, philosophers))
+	threads = malloc(sizeof(pthread_t) * data.nb_phil);
+	if (!threads)
+		return (1);
+	if (setup_threads(&data, philosophers, threads))
 		return (ft_putstr_fd("something went horribly wrong\n", 2, 1));
-	mr_manager(philosophers, &data);
 	while (1)
 	{
 		pthread_mutex_lock(&data.state_mutex);
@@ -77,6 +76,6 @@ int		main(int argc, char **argv)
 	}
 	free(data.forks);
 	free(philosophers);
-	system("leaks philo_one.out");
+	free(threads);
 	return (0);
 }

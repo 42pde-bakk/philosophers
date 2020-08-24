@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/23 18:26:21 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/24 18:43:38 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ int		setup_threads(t_data *data)
 		return (1);
 	philos = malloc(sizeof(t_philo) * data->nb_phil);
 	if (!philos)
+	{
+		free(threads);
 		return (1);
+	}
 	while (i < data->nb_phil)
 	{
 		initialize_philosopher(&philos[i], data, i);

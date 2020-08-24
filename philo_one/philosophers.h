@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/24 11:08:29 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/24 18:40:51 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <pthread.h>
 # include <string.h>
 # include <sys/time.h>
-#include <stdio.h>
 
 enum	e_state
 {
