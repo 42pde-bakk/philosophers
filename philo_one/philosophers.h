@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/24 18:40:51 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/26 14:36:14 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,17 @@ typedef struct	s_data
 	pthread_mutex_t	state_mutex;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	pen;
-	int				threads_alive;
 	unsigned long	starttime;
 }				t_data;
 
 typedef struct	s_philo
 {
 	int				id;
-	int				amount_ate;
 	unsigned long	last_ate;
 	pthread_mutex_t	*lfork_mutex;
 	pthread_mutex_t	*rfork_mutex;
-	t_data			*data;
 	pthread_mutex_t	last_ate_mutex;
+	t_data			*data;
 }				t_philo;
 
 int				init_struct(t_data *data, int argc, char **argv);

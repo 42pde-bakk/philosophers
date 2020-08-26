@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/24 11:13:08 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/26 14:31:34 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	set_state(t_philo *phil)
 	pthread_mutex_lock(&phil->data->state_mutex);
 	if (phil->data->state == ALIVE)
 		phil->data->state = DONE;
-	--phil->data->threads_alive;
 	pthread_mutex_unlock(&phil->data->state_mutex);
 }
 
@@ -61,6 +60,7 @@ void	*start_philosopher(void *param)
 	phil = param;
 	eatcount = -1;
 	philosopher_eat(phil, &eatcount);
+	usleep((phil->id % 2) * 200);
 	while (eatcount != phil->data->eat_times && check_death(phil) == 0)
 	{
 		philosopher_write(phil, "is thinking");

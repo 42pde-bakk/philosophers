@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/24 18:40:26 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/26 16:20:22 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@ int		initialize_philosopher(t_philo *philosopher, t_data *data, int i)
 	philosopher->data = data;
 	philosopher->lfork_mutex = &data->forks[i];
 	philosopher->rfork_mutex = &data->forks[(i + 1) % data->nb_phil];
-	if (philosopher->id == data->nb_phil)
-	{
-		philosopher->rfork_mutex = &data->forks[i];
-		philosopher->lfork_mutex = &data->forks[(i + 1) % data->nb_phil];
-	}
 	philosopher->last_ate = get_time_ms();
 	if (pthread_mutex_init(&philosopher->last_ate_mutex, NULL))
 		return (1);
@@ -42,12 +37,15 @@ int		setup_threads(t_data *data, t_philo *philosophers, pthread_t *threads)
 		if (pthread_create(&threads[i], NULL, start_philosopher,
 			&philosophers[i]))
 			return (1);
-		if (pthread_detach(threads[i]))
-			return (1);
 		++i;
-		++data->threads_alive;
 	}
 	mr_manager(philosophers, data);
+	i = 0;
+	while (i < data->nb_phil)
+	{
+		pthread_join(threads[i], NULL);
+		++i;
+	}
 	return (0);
 }
 
@@ -67,13 +65,6 @@ int		main(int argc, char **argv)
 		return (1);
 	if (setup_threads(&data, philosophers, threads))
 		return (ft_putstr_fd("something went horribly wrong\n", 2, 1));
-	while (1)
-	{
-		pthread_mutex_lock(&data.state_mutex);
-		if (!data.threads_alive)
-			break ;
-		pthread_mutex_unlock(&data.state_mutex);
-	}
 	free(data.forks);
 	free(philosophers);
 	free(threads);

@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/24 18:45:16 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/26 16:36:22 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,5 @@ int		main(int argc, char **argv)
 		return (ft_putstr_fd("bad arguments\n", 2, 1));
 	if (setup_threads(&data))
 		return (ft_putstr_fd("something went horribly wrong\n", 2, 1));
+	return (0);
 }
