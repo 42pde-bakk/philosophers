@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/23 18:37:52 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/28 19:01:53 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,4 @@ void	start_philosopher(t_philo *phil)
 		usleep(phil->data->time_to_sleep * 1000);
 	}
 	sem_post(phil->data->finished);
-	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/28 17:01:51 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/28 19:00:43 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,11 @@ void	*mr_manager(void *param)
 		{
 			philosopher_death(phil);
 			sem_post(phil->data->finished);
-			return (0);
+			exit(1);
 		}
 		sem_post(phil->state_sem);
 		usleep(50);
 	}
+	exit(0);
 	return (0);
 }

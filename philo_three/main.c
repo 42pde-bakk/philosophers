@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/28 16:37:07 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/28 17:56:38 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ int		setup_threads(t_data *data)
 		return (1);
 	while (i < data->nb_phil)
 	{
+		initialize_philosopher(&philosophers[i], data, i);
 		pid = fork();
 		if (pid < 0)
 			exit(1);
-		initialize_philosopher(&philosophers[i], data, i);
 		if (pid == 0)
 			fork_philosopher(philosophers[i]);
 		data->pids[i] = pid;
