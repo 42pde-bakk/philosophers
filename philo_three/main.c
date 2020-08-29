@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/28 17:56:38 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/29 11:20:12 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,22 @@ void	fork_philosopher(t_philo philosopher)
 	start_philosopher(&philosopher);
 }
 
+void	*monitor_deaths(void *param)
+{
+	t_data	*data;
+
+	data = param;
+	sem_wait(data->dead_sem);
+	data->state = DEAD;
+	return (0);
+}
+
 int		setup_threads(t_data *data)
 {
 	t_philo		*philosophers;
 	int			i;
 	int			pid;
+	pthread_t	thread;
 
 	i = 0;
 	philosophers = malloc(sizeof(t_philo) * data->nb_phil);
@@ -61,6 +72,8 @@ int		setup_threads(t_data *data)
 		usleep(50);
 		++i;
 	}
+	pthread_create(&thread, NULL, monitor_deaths, data);
+	pthread_detach(thread);
 	genocide(data);
 	return (free_shit(philosophers, 0));
 }

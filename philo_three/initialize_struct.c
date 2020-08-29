@@ -6,7 +6,7 @@
 /*   By: peer <peer@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/19 23:56:21 by peer          #+#    #+#                 */
-/*   Updated: 2020/08/21 01:24:54 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/29 11:13:54 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ int		init_mutexes(t_data *data)
 		return (1);
 	sem_unlink("/finished");
 	data->finished = sem_open("/finished", O_CREAT, S_IRWXU | S_IRWXO, 0);
+	sem_unlink("/dead");
+	data->dead_sem = sem_open("/dead", O_CREAT, S_IRWXU | S_IRWXO, 0);
+	data->state = ALIVE;
 	return (0);
 }
 

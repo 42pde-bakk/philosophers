@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/28 17:54:33 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/29 11:13:41 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@
 # include <sys/wait.h>
 # include <signal.h>
 
+enum	e_state
+{
+	ALIVE,
+	DEAD,
+	DONE
+};
+
 typedef struct	s_data
 {
 	int				nb_phil;
@@ -35,6 +42,8 @@ typedef struct	s_data
 	unsigned long	starttime;
 	int				*pids;
 	sem_t			*finished;
+	sem_t			*dead_sem;
+	int				state;
 }				t_data;
 
 typedef struct	s_philo

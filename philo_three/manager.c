@@ -6,11 +6,12 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/28 19:00:43 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/29 11:18:47 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include <stdio.h>
 
 void	genocide(t_data *data)
 {
@@ -18,13 +19,20 @@ void	genocide(t_data *data)
 
 	i = 0;
 	sem_wait(data->finished);
-	while (data->pids[i])
+	usleep(100);
+	if (data->state != DEAD)
+		while (data->pids[i])
+		{
+			waitpid(data->pids[i], NULL, 0);
+			++i;
+		}
+	else while (data->pids[i])
 	{
 		kill(data->pids[i], SIGTERM);
 		++i;
 	}
 	i = 0;
-	while (data->pids[i])
+	while (data->state == DEAD && data->pids[i])
 	{
 		waitpid(data->pids[i], NULL, 0);
 		++i;
@@ -54,6 +62,7 @@ void	*mr_manager(void *param)
 		if (get_time_ms() - phil->last_ate >=
 			(unsigned long)phil->data->time_to_die)
 		{
+			sem_post(phil->data->dead_sem);
 			philosopher_death(phil);
 			sem_post(phil->data->finished);
 			exit(1);

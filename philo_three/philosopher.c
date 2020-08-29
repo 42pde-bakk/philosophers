@@ -6,11 +6,12 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/28 19:01:53 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/29 11:21:49 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include <stdio.h>
 
 void	philosopher_write(t_philo *phil, const char *s)
 {
@@ -53,6 +54,7 @@ void	start_philosopher(t_philo *phil)
 		sem_post(phil->data->forks);
 		philosopher_write(phil, "is sleeping");
 		usleep(phil->data->time_to_sleep * 1000);
+		printf("phil %d has eaten %d times\n", phil->id, eatcount);
 	}
 	sem_post(phil->data->finished);
 }
