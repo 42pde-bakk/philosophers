@@ -6,12 +6,24 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/29 11:18:47 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/30 19:59:15 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <stdio.h>
+
+void	*monitor_deaths(void *param)
+{
+	t_data	*data;
+
+	data = param;
+	sem_wait(data->dead_sem);
+	data->state = DEAD;
+	sem_post(data->dead_sem);
+	sem_post(data->finished);
+	return (0);
+}
 
 void	genocide(t_data *data)
 {
@@ -19,13 +31,15 @@ void	genocide(t_data *data)
 
 	i = 0;
 	sem_wait(data->finished);
-	usleep(100);
+	// usleep(100);
 	if (data->state != DEAD)
+	{
 		while (data->pids[i])
 		{
 			waitpid(data->pids[i], NULL, 0);
 			++i;
 		}
+	}
 	else while (data->pids[i])
 	{
 		kill(data->pids[i], SIGTERM);
@@ -55,9 +69,9 @@ void	*mr_manager(void *param)
 	t_philo	*phil;
 
 	phil = param;
-	usleep(50);
 	while (1)
 	{
+		usleep(100);
 		sem_wait(phil->state_sem);
 		if (get_time_ms() - phil->last_ate >=
 			(unsigned long)phil->data->time_to_die)
@@ -68,7 +82,6 @@ void	*mr_manager(void *param)
 			exit(1);
 		}
 		sem_post(phil->state_sem);
-		usleep(50);
 	}
 	exit(0);
 	return (0);

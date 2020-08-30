@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/29 11:13:41 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/30 15:32:18 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int				init_struct(t_data *data, int argc, char **argv);
 void			philosopher_write(t_philo *phil, const char *s);
 void			start_philosopher(t_philo *phil);
 
+void			*monitor_deaths(void *param);
 void			genocide(t_data *data);
 void			*mr_manager(void *param);
 
