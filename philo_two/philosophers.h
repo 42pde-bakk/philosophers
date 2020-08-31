@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:39:45 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/23 18:29:11 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/31 13:45:35 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,7 @@ int				ft_atoi(const char *str);
 void			ft_put_ul_fd(unsigned long n, int fd);
 
 unsigned long	get_time_ms(void);
+unsigned long	get_time_us(void);
+void			stupid_sleep(unsigned long time2sleep);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/23 18:27:03 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/31 13:47:40 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,13 @@ void	*start_philosopher(void *param)
 		if (take_forks(phil))
 			break ;
 		philosopher_eat(phil, &eatcount);
-		usleep(phil->data->time_to_eat * 1000);
+		stupid_sleep(phil->data->time_to_eat);
 		sem_post(phil->data->forks);
 		sem_post(phil->data->forks);
 		if (check_death(phil))
 			break ;
 		philosopher_write(phil, "is sleeping");
-		usleep(phil->data->time_to_sleep * 1000);
+		stupid_sleep(phil->data->time_to_sleep);
 		if (check_death(phil))
 			break ;
 	}

@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/31 11:52:47 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/31 13:57:24 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,20 @@ void	*start_philosopher(void *param)
 	phil = param;
 	eatcount = -1;
 	philosopher_eat(phil, &eatcount);
-	usleep((phil->id % 2) * 300);
+	usleep((phil->id % 2) * 200);
 	while (eatcount != phil->data->eat_times && check_death(phil) == 0)
 	{
 		philosopher_write(phil, "is thinking");
 		if (grab_forks(phil))
 			break ;
 		philosopher_eat(phil, &eatcount);
-		usleep(phil->data->time_to_eat * 1000);
+		stupid_sleep(phil->data->time_to_eat);
 		pthread_mutex_unlock(phil->lfork_mutex);
 		pthread_mutex_unlock(phil->rfork_mutex);
 		if (check_death(phil))
 			break ;
 		philosopher_write(phil, "is sleeping");
-		usleep(phil->data->time_to_sleep * 1000);
+		stupid_sleep(phil->data->time_to_sleep);
 	}
 	set_state(phil);
 	return (NULL);

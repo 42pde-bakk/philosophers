@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:29:42 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/30 19:55:48 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/31 13:59:40 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ void	start_philosopher(t_philo *phil)
 		sem_wait(phil->data->forks);
 		philosopher_write(phil, "has taken fork");
 		philosopher_eat(phil, &eatcount);
-		usleep(phil->data->time_to_eat * 1000);
+		stupid_sleep(phil->data->time_to_eat);
 		sem_post(phil->data->forks);
 		sem_post(phil->data->forks);
 		philosopher_write(phil, "is sleeping");
-		usleep(phil->data->time_to_sleep * 1000);
+		stupid_sleep(phil->data->time_to_sleep);
 	}
 	sem_post(phil->data->finished);
 }
