@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 21:49:38 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/30 19:51:05 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/31 11:21:05 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ int		setup_threads(t_data *data)
 		if (pid == 0)
 			fork_philosopher(philosophers[i]);
 		data->pids[i] = pid;
-		// usleep(50);
 		++i;
 	}
 	pthread_create(&thread, NULL, monitor_deaths, data);

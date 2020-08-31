@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/30 19:59:15 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/31 11:16:22 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	genocide(t_data *data)
 
 	i = 0;
 	sem_wait(data->finished);
-	// usleep(100);
 	if (data->state != DEAD)
 	{
 		while (data->pids[i])
@@ -40,11 +39,12 @@ void	genocide(t_data *data)
 			++i;
 		}
 	}
-	else while (data->pids[i])
-	{
-		kill(data->pids[i], SIGTERM);
-		++i;
-	}
+	else
+		while (data->pids[i])
+		{
+			kill(data->pids[i], SIGTERM);
+			++i;
+		}
 	i = 0;
 	while (data->state == DEAD && data->pids[i])
 	{
