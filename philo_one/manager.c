@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/22 00:14:48 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/31 11:53:20 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	mr_manager(t_philo *philosophers, t_data *data)
 	i = 0;
 	while (1)
 	{
+		usleep(100);
 		pthread_mutex_lock(&philosophers[i].last_ate_mutex);
 		if (get_time_ms() - philosophers[i].last_ate >=
 			(unsigned long)data->time_to_die)
@@ -35,7 +36,6 @@ int	mr_manager(t_philo *philosophers, t_data *data)
 		++i;
 		if (i >= data->nb_phil)
 			i = 0;
-		usleep(50);
 	}
 	return (0);
 }

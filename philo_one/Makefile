@@ -6,13 +6,13 @@
 #    By: Peer <pde-bakk@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/25 17:28:30 by pde-bakk      #+#    #+#                  #
-#    Updated: 2020/08/26 16:31:29 by pde-bakk      ########   odam.nl          #
+#    Updated: 2020/08/31 11:48:53 by pde-bakk      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_one.out
 
-FLAGS = -Wall -Wextra -Werror -pedantic -ansi -O3
+FLAGS = -Wall -Wextra -Werror -pedantic
 
 ifeq ($(shell uname), Linux)
  CXX = gcc
