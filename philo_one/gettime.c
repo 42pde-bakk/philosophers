@@ -6,12 +6,13 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/16 03:51:31 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/31 13:57:53 by pde-bakk      ########   odam.nl         */
+/*   Updated: 2020/08/31 22:08:41 by peer          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/time.h>
 #include <unistd.h>
+#include <stddef.h>
 
 unsigned long	get_time_ms(void)
 {
