@@ -6,7 +6,7 @@
 /*   By: pde-bakk <pde-bakk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/17 20:39:21 by pde-bakk      #+#    #+#                 */
-/*   Updated: 2020/08/22 22:37:31 by peer          ########   odam.nl         */
+/*   Updated: 2020/08/31 11:59:27 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	mr_manager(t_philo *philosophers, t_data *data)
 	i = 0;
 	while (1)
 	{
+		usleep(100);
 		sem_wait(data->state_sem);
 		if (get_time_ms() - philosophers[i].last_ate >=
 			(unsigned long)data->time_to_die)
