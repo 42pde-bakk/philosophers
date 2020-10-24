@@ -1,0 +1,28 @@
+name: Philo three macOS/Ubuntu compile check CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  jobuntu:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: philo_three
+      run:  |
+            make re -C philo_three
+
+  stevejobs:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: philo_three
+      run:  |
+            make re -C philo_three
