@@ -1,4 +1,4 @@
-name: Philo three macOS/Ubuntu compile check CI
+name: Philo_three macOS/Ubuntu compile check CI
 
 on:
   push:
