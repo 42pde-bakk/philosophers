@@ -14,3 +14,6 @@
 
 
 ![Philo_three macOS/Ubuntu compile check CI](https://github.com/pde-bakk/philosophers/workflows/Philo_three%20macOS/Ubuntu%20compile%20check%20CI/badge.svg)
+
+
+## Project status: [![pde-bakk's 42 Philosophers Score](https://badge42.vercel.app/api/v2/cl1kxvlgu002109lfx5bumh9s/project/1936614)](https://github.com/JaeSeoKim/badge42)
